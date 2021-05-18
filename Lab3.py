@@ -1,76 +1,73 @@
 # Метод парабол
 
-import random
-
-a0 = 3  # Задаём коэффициенты многочлена
-a1 = 2
-a2 = 1
-a3 = 1
-a4 = 2
-a5 = 1
+import math as m
 
 
-def J(u):
-    return a0 * (u ** 5) + a1 * (u ** 4) + a2 * (u ** 3) + a3 * (u ** 2) + a4 * u + a5
+def f(x):
+    f = 4*m.sin(x) - 3*m.cos(x)
+    return f
 
 
-n = 0  # Шаг 1: Задаём n = 0, a, b, delta, eps
-print("Введите отрезок [a,b] ")
-a = int(input())
-b = int(input())
-eps = 0.2
-delta = random.uniform(0, (b - a) / 2)
-u1 = random.uniform(a, a + delta)  # Тройка точек u1 , u2 , u3
-u2 = random.uniform(a, b)
-u3 = random.uniform(b - delta, b)
-d1 = J(u1) - J(u2)
-d2 = J(u3) - J(u2)
+e = 0.0001
 
-while True:  # пока не выполняются условия, по которым можно считать тройку точек выпуклой, подбираем точку u2 на отрезке a,b
-    if (d1 >= 0) and (d2 >= 0) and (d1 + d2 > 0):
-        break
-    u2 = random.uniform(u1, u3)
-    d1 = J(u1) - J(u2)
-    d2 = J(u3) - J(u2)
+a = -5
+b = 3
+c = (a + b) / 2
+ya = f(a)
+yb = f(b)
+yc = f(c)
+N = 0
 
-w = u2 + (((u3 - u2) ** 2) * d1 - ((u2 - u1) ** 2) * d2) / (
-            2 * ((u3 - u2) * d1 - (u2 - u1) * d2))  # точка минимума построенной параболы
-if w < u2:  # 1.	Точка минимума параболы расположена слева от точки
-    if J(w) < J(u2):  # если условие выполняется, то новой выпуклой тройкой считаем u1,w,u2
-        u3 = u2
-        u2 = w
-    elif J(w) > J(u2):  # если условие выполняется, то новой выпуклой тройкой считаем w,u2,u3
-        u1 = w
+while (b - a > 2 * e):
+    s = c + 0.5 * ((b - c) * (b - c) * (ya - yc) - (c - a) * (c - a) * (yb - yc)) / (
+            (b - c) * (ya - yc) + (c - a) * (yb - yc))
+    if (s == c):
+        t = (a + c) / 2
     else:
-        if J(u1) > J(u2):  # если условие выполняется, то новой выпуклой тройкой считаем u1,w,u2
-            u3 = u2
-            u2 = w
-        elif J(u2) > J(u3):  # если условие выполняется, то новой выпуклой тройкой считаем w,u2,u3
-            u1 = w
-elif w > u2:  # 2.	Точка минимума параболы расположена справа от точки
-    if J(w) < J(u2):  # если условие выполняется, то новой выпуклой тройкой считаем u2,w,u3
-        u1 = u2
-        u2 = w
-    elif J(w) > J(u2):  # если условие выполняется, то новой выпуклой тройкой считаем u1,u2,w
-        u3 = w
+        t = s
+        yt = f(t)
+        N = N + 1
+
+    if (t < c):
+        if (yt < yc):
+            b = c
+            yb = yc
+            c = t
+            yc = yt
+        else:
+            if (yt > yc):
+                a = t
+                ya = yt
+            else:
+                a = t
+                ya = yt
+                b = c
+                yb = yc
+                c = (a + b) / 2
+                yc = f(c)
+                N = N + 1
     else:
-        if J(u3) > J(u2):  # если условие выполняется, то новой выпуклой тройкой считаем u2,w,u3
-            u1 = u2
-            u2 = w
-        elif J(u1) > J(u2):  # если условие выполняется, то новой выпуклой тройкой считаем u1,u2,w
-            u3 = w
-delta = random.uniform(0, (u3 + u1) / 2)
+        if (t > c):
+            if (yt < yc):
+                a = c
+                ya = yc
+                c = t
+                yc = yt
+            else:
+                if (yt > yc):
+                    b = t
+                    yb = yt
+                else:
+                    a = c
+                    ya = yc
+                    b = t
+                    yb = yt
+                    c = (a + b) / 2
+                    yc = f(c)
+                    N = N + 1
+x = (a + b) / 2
+y = f(x)
 
-while delta > eps:  # 3.	Точка минимума параболы совпадает c u2.
-    n += 1
-    if J(u2 + delta) < J(u2):
-        u2 = u2 + delta
-    elif J(u2 - delta) < J(u2):
-        u2 = u2 - delta
-    delta -= eps  # уменьшаем delta , пока либо не получим новую выпуклую тройку
-    # либо delta не будет меньше заданной величины
-
-u0 = u2
-print("u*=", u0)
-print("J(u*)=", J(u0))
-print()
+print("x = ", x)
+print("y = ", y)
+#  print("Kol-vo tochek: ", N)
