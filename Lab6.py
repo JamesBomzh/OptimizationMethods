@@ -1,9 +1,7 @@
 # Метод Ньютона многомерной минимизации
 
 import sympy as sp
-import numpy as np
 import math
-from sympy.matrices import *
 
 x, y = sp.symbols('u1, u2')
 
@@ -19,4 +17,4 @@ while math.sqrt((J.diff(x) ** 2 + J.diff(y) ** 2).subs(x, x0).subs(y, y0)) >= ep
     x0 = x0 - lmd * J.diff(x).subs(x, x0)
     y0 = y0 - lmd * J.diff(y).subs(y, y0)
 
-print(x0, y0, x0 ** 2 + 6 * x0 + y0 ** 2)
+print(x0, y0, J.subs(x, x0).subs(y, y0))
