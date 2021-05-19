@@ -1,30 +1,28 @@
 import math
 import sympy as sp
 
-u1, u2 = sp.symbols('u1, u2')
+x, y = sp.symbols('x, y')
 
 eps = 0.0001
 k = 0
 r = 1
 
-J = (u1 - 3) ** 2 + (u2 - 2) ** 2
-g = (u1 + u2 - 4) ** 2
+J = (x - 3) ** 2 + (y - 2) ** 2
+g = (x + y - 4) ** 2
 P = J + r * g
 
-a1 = 1
-a2 = 1
 
-u1i = a1
-u2i = a2
+x0 = 1
+y0 = 1
 
 
-while math.sqrt((P.diff(u1) ** 2 + P.diff(u2) ** 2).subs(u1, u1i).subs(u2, u2i)) >= eps:
-    h = 1.0 / (P.diff(u1, u1) * P.diff(u2, u2) - P.diff(u1, u2) * P.diff(u2, u1)).subs(u1, u1i).subs(u2, u2i)
-    u1i = u1i - h * P.diff(u1).subs(u1, u1i).subs(u2, u2i)
-    u2i = u2i - h * P.diff(u2).subs(u1, u1i).subs(u2, u2i)
+while math.sqrt((P.diff(x) ** 2 + P.diff(y) ** 2).subs(x, x0).subs(y, y0)) >= eps:
+    h = 1.0 / (P.diff(x, x) * P.diff(y, y) - P.diff(x, y) * P.diff(y, x)).subs(x, x0).subs(y, y0)
+    x0 = x0 - h * P.diff(x).subs(x, x0).subs(y, y0)
+    y0 = y0 - h * P.diff(y).subs(x, x0).subs(y, y0)
     k += 1
     r /= 10
     P = J + r * g
 
-print(u1i, u2i)
-print(P.subs(u1, u1i).subs(u2, u2i))
+print(x0, y0)
+print(P.subs(x, x0).subs(y, y0))
